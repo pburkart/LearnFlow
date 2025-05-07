@@ -27,4 +27,11 @@ class LearningPath extends Model
     {
         return $this->hasMany(Comment::class, 'learning_path_id')->with('user');
     }
+	
+	protected function casts(): array
+    {
+        return [
+			'is_premium' => 'boolean',
+        ];
+    }
 }

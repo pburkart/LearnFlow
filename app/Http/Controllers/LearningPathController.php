@@ -89,6 +89,7 @@ class LearningPathController extends Controller
 			'title' => 'required|string|max:255',
 			'description' => 'required|string',
 			'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:8192',
+			'is_premium' => 'nullable',
 		]);
 
 		\Log::info('Validation passed', $validated);
@@ -108,6 +109,7 @@ class LearningPathController extends Controller
 				'title' => $validated['title'],
 				'description' => $validated['description'],
 				'image' => $validated['image'] ?? $learningPath->image,
+				'is_premium' => $request->has('is_premium'),
 			]);
 
 			\Log::info('Learning path updated successfully', $learningPath->toArray());

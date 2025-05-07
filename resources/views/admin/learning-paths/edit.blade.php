@@ -33,6 +33,13 @@
                         <p style="color: #f87171; font-size: 14px; margin-top: 4px;">{{ $message }}</p>
                     @enderror
                 </div>
+				<div style="margin-bottom: 16px;">
+					<label for="is_premium" style="font-size:16px; color: #e5e7eb; margin-right: 8px; display: inline-block;" value="true">Is Premium?</label>
+					<input type="checkbox" name="is_premium" id="is_premium" style="transform: scale(1.5); border: 1px solid #4b5563; background-color: #4b5563; color: #e5e7eb; border-radius: 4px; padding: 8px; vertical-align: middle;" {{ $learningPath->is_premium ? 'checked' : '' }}>
+					@error('is_premium')
+						<p style="color: #f87171; font-size: 14px; margin-top: 4px;">{{ $message }}</p>
+					@enderror
+				</div>
                 <div style="display: flex; justify-content: space-between;">
                     <a href="{{ route('admin.learning-paths.index') }}" style="background-color: #6b7280; color: #ffffff; padding: 8px 16px; border-radius: 4px; text-decoration: none;">Cancel</a>
                     <button type="submit" style="background-color: #2563eb; color: #ffffff; padding: 8px 16px; border-radius: 4px; border: none; cursor: pointer;">Update Learning Path</button>
