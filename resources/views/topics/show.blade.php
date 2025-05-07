@@ -83,14 +83,13 @@
                                                 ->first()
                                             : null;
                                         $answer = $userResult && $userResult->answer;
-										$isCompleted = $userResult && $userResult->is_correct;
-
+                                        $isCompleted = $userResult && $userResult->is_correct;
                                     @endphp
                                     @foreach ($quiz->options as $index => $option)
                                         <div style="margin-bottom: 8px;">
                                             <label style="color: #e5e7eb;">
-                                                <input type="radio" name="answer" value="{{ $index }}" 
-												{{ ($userResult && $userResult->answer == $index) ? 'checked' : '' }} required>
+                                                <input type="radio" name="answer" value="{{ $index }}"
+                                                {{ ($userResult && $userResult->answer == $index) ? 'checked' : '' }} required>
                                                 {{ $option }}
                                             </label>
                                         </div>
@@ -108,7 +107,55 @@
                 <!-- Tests Tab -->
                 <div id="tests" class="tab-content" style="display: none;">
                     <p style="color: #e5e7eb; margin-bottom: 8px;"><strong>Tests:</strong></p>
-                    <p style="color: #e5e7eb;">No tests available yet.</p>
+                    @if (!$topic->tests || $topic->tests->isEmpty())
+                        <p style="color: #e5e7eb;">No tests available yet.</p>
+                    @else
+                        @foreach ($topic->tests as $test)
+                            <div style="background-color: #4b5563; padding: 16px; border-radius: 8px; border: 2px solid #60a5fa; margin-bottom: 16px;">
+                                <h3 style="color: #e5e7eb; font-weight: 500; margin-bottom: 12px;">{{ $test->title }}</h3>
+                                @if ($test->test_questions->isEmpty())
+                                    <p style="color: #e5e7eb;">No questions available for this test.</p>
+                                @else
+                                    <form action="{{ route('tests.submit', $test) }}" method="POST">
+                                        @csrf
+                                        @foreach ($test->test_questions as $index => $question)
+                                            <div style="margin-bottom: 16px;">
+                                                <p style="color: #e5e7eb; font-weight: 500; margin-bottom: 8px;">Question {{ $index + 1 }}: {{ $question->question }}</p>
+                                                @php
+                                                    $userResult = \App\Models\TestResult::where('user_id', Auth::id())
+                                                        ->where('test_question_id', $question->id)
+                                                        ->first();
+                                                @endphp
+                                                @foreach ($question->options as $optIndex => $option)
+                                                    <div style="margin-bottom: 8px;">
+                                                        <label style="color: #e5e7eb;">
+                                                            <input type="radio" name="answers[{{ $question->id }}]" value="{{ $optIndex }}"
+                                                                {{ ($userResult && $userResult->answer == $optIndex) ? 'checked' : '' }} required>
+                                                            {{ $option }}
+                                                        </label>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endforeach
+                                        <button type="submit" style="background-color: #16a34a; color: #ffffff; padding: 8px 16px; border-radius: 4px; border: none; cursor: pointer;">Submit Test</button>
+                                    </form>
+                                    @php
+                                        $totalQuestions = $test->test_questions->count();
+                                        $completedCorrect = \App\Models\TestResult::where('user_id', Auth::id())
+                                            ->whereIn('test_question_id', $test->test_questions->pluck('id'))
+                                            ->where('is_correct', true)
+                                            ->count();
+                                        $isTestCompleted = $completedCorrect === $totalQuestions && $totalQuestions > 0;
+                                    @endphp
+                                    @if ($isTestCompleted)
+                                        <p style="color: #16a34a; margin-top: 8px;">Completed ({{ $completedCorrect }}/{{ $totalQuestions }})</p>
+                                    @else
+                                        <p style="color: #e5e7eb; margin-top: 8px;">{{ $completedCorrect }}/{{ $totalQuestions }} correct</p>
+                                    @endif
+                                @endif
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
             </div>
 

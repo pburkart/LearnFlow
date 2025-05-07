@@ -8,6 +8,8 @@ use App\Http\Controllers\LearningPathController;
 use App\Http\Controllers\TopicController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\TestQuestionController;
 
 // Unpriviledged Routes
 Route::get('/dashboard', [HomeController::class, 'index'])->name('home');
@@ -19,6 +21,9 @@ Route::post('/topics/{id}/complete', [TopicController::class, 'markComplete'])->
 
 // Unpriviledged Quiz Routes
 Route::post('quizzes/{quiz}/submit', [QuizController::class, 'submit'])->name('quizzes.submit');
+
+// Unpriviledged Test Routes
+Route::post('tests/{test}/submit', [TestController::class, 'submit']) -> name('tests.submit');
 
 // Unpriviledged Learning Path Routes 
 Route::get('/learning-paths', [LearningPathController::class, 'list'])->name('learning-paths.show');
@@ -60,8 +65,21 @@ Route::prefix('admin')->name('admin.')->group(function () {
 	
 	// Quiz CRUD Routes
 	Route::post('/quizzes', [QuizController::class, 'store']) -> name('quizzes.store');
-	Route::put('/quizzes/{quiz}}', [QuizController::class, 'update']) -> name('quizzes.update');
+	Route::put('/quizzes/{quiz}', [QuizController::class, 'update']) -> name('quizzes.update');
 	Route::delete('/quizzes/{quiz}', [QuizController::class, 'destroy']) -> name('quizzes.destroy');
+	
+	// Test CRUD Routes
+	Route::get('/tests', [TestController::class, 'index']) -> name('tests.index');
+	Route::get('/tests/create', [TestController::class, 'create']) -> name('tests.create');
+	Route::post('/tests', [TestController::class, 'store']) -> name('tests.store');
+	Route::get('/tests/{test}/edit', [TestController::class, 'edit']) -> name('tests.edit');
+	Route::put('/tests/{test}', [TestController::class, 'update']) -> name('tests.update');
+	Route::delete('/tests/{test}', [TestController::class, 'destroy']) -> name('tests.destroy');
+	
+	// Test Question CRUD Routes
+	Route::post('/tests/{test}/questions', [TestQuestionController::class, 'store']) -> name('test_questions.store');
+	Route::put('/tests/{test}/questions/{question}', [TestQuestionController::class, 'update']) -> name('test_questions.update');
+	Route::delete('/tests/{test}/questions/{question}', [TestQuestionController::class, 'destroy']) -> name('test_questions.destroy');
 	
 	// Users CRUD Routes
 	Route::get('/users', [UserController::class, 'index'])->name('users.index');

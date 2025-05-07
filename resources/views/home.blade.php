@@ -39,8 +39,8 @@
                                 @endif
                             </div>
                             <div class="path-card-content">
-                                <h3 class="path-card-title">{{ $path->title }}</h3>
-                                <p class="path-card-description">{{ Str::limit($path->description, 100) }}</p>
+                                <h3 class="path-card-title" style="height:55px;">{{ $path->title }}</h3>
+                                <p class="path-card-description" style="height:150px;">{{ Str::limit($path->description, 100) }}</p>
                                 <!-- Progress Bar -->
                                 @php
                                     $totalQuizzes = $path->topics->flatMap->quizzes->count();

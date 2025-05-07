@@ -31,6 +31,14 @@ class Topic extends Model
     }
 
     /**
+     * Get the tests for the topic.
+     */
+    public function tests()
+    {
+        return $this->hasMany(Test::class, 'topic_id');
+    }
+
+    /**
      * Get the user quiz results for the topic's quizzes.
      */
     public function userQuizResults()
@@ -38,18 +46,20 @@ class Topic extends Model
         return $this->hasManyThrough(
             UserQuizResult::class,
             Quiz::class,
-            'topic_id', // Foreign key on Quiz	
+            'topic_id', // Foreign key on Quiz
             'quiz_id',  // Foreign key on UserQuizResult
             'id',       // Local key on Topic
-			'id',
-			'answer'
+            'id'        // Local key on Quiz
         );
     }
-	
-	public function userProgress()
-	{
-		return $this->hasOne(UserProgress::class, 'topic_id')->where('user_id', auth()->id());
-	}
+
+    /**
+     * Get the user's progress for the topic.
+     */
+    public function userProgress()
+    {
+        return $this->hasOne(UserProgress::class, 'topic_id')->where('user_id', auth()->id());
+    }
 
     /**
      * Get the learning path that owns the topic.
