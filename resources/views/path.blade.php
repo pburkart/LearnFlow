@@ -44,44 +44,48 @@
                     <p style="color: #e5e7eb; text-align: center;">No topics available.</p>
                 @else
                     @foreach ($path->topics as $topic)
-                        <div style="position: relative; background-color: #4b5563; border-radius: 8px; padding: 16px; margin-bottom: 16px; overflow: hidden;">
-                            <!-- Background Image -->
-                            @if ($topic->image)
-                                <img src="{{ $topic->image }}" alt="{{ $topic->title }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.2; z-index: 1;">
-                            @endif
-                            <div style="position: relative; z-index: 2;">
-                                <h3 style="font-size: 20px; color: #e5e7eb; margin-bottom: 8px;">
-                                    <a href="{{ route('topics.show', $topic->id) }}" style="color: #60a5fa; text-decoration: none;">{{ $topic->title }}</a>
-                                </h3>
-                                <p style="color: #d1d5db; font-size: 14px; margin-bottom: 8px;">{{ \Illuminate\Support\Str::limit($topic->description, 100) }}</p>
-                                <!-- Activity Status -->
-                                <p style="color: #e5e7eb; font-size: 14px; margin-bottom: 8px;">
-									<strong>Progress:</strong>
-									@if ($topic->userProgress && $topic->userProgress->completed)
-										Completed
-									@else
-										Not Started
-									@endif
-								</p>
-															<!-- Quizzes and Final Test -->
-                                <p style="color: #e5e7eb; font-size: 14px; margin-bottom: 8px;">
-                                    <strong>Quizzes:</strong>
-                                    @if (empty($topic->quizzes) || $topic->quizzes->isEmpty())
-                                        No quizzes
-                                    @else
-                                        {{ $topic->userQuizResults->whereIn('quiz_id', $topic->quizzes->pluck('id'))->count() }}/{{ $topic->quizzes->count() }} completed
-                                    @endif
-                                </p>
-                                <p style="color: #e5e7eb; font-size: 14px;">
-                                    <strong>Final Test:</strong>
-                                    @if ($topic->finalTestResult)
-                                        {{ $topic->finalTestResult->score }}%
-                                    @else
-                                        0%
-                                    @endif
-                                </p>
-                            </div>
-                        </div>
+						<a href="{{ route('topics.show', $topic->id) }}" style="color: #60a5fa; text-decoration: none;">
+							<div style="position: relative; background-color: #4b5563; border-radius: 8px; padding: 16px; margin-bottom: 16px; overflow: hidden;">
+								<!-- Background Image -->
+								@if ($topic->image)
+									<img src="{{ $topic->image }}" alt="{{ $topic->title }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.05; z-index: 1;">
+								@endif
+								<div style="position: relative; z-index: 2;">
+									<h3 style="font-size: 20px; color: #e5e7eb; margin-bottom: 8px;">
+										<p style="color: #60a5fa; text-decoration: none;">{{ $topic->title }}</p>
+									</h3>
+									<p style="color: #d1d5db; font-size: 14px; margin-bottom: 8px;">{{ \Illuminate\Support\Str::limit($topic->description, 100) }}</p>
+									<!-- Activity Status -->
+									<p style="color: #e5e7eb; font-size: 14px; margin-bottom: 8px;">
+										<strong>Progress:</strong>
+										@if ($topic->userProgress && $topic->userProgress->completed)
+											Completed
+										@elseif ($topic->userQuizResults->whereIn('quiz_id', $topic->quizzes->pluck('id'))->count() > 0)
+											In Progress
+										@else
+											Not Started
+										@endif
+									</p>
+									<!-- Quizzes and Final Test -->
+									<p style="color: #e5e7eb; font-size: 14px; margin-bottom: 8px;">
+										<strong>Quizzes:</strong>
+										@if (empty($topic->quizzes) || $topic->quizzes->isEmpty())
+											No quizzes
+										@else
+											{{ ($topic->userQuizResults ? $topic->userQuizResults->whereIn('quiz_id', $topic->quizzes->pluck('id'))->count() : 0) }}/{{ $topic->quizzes->count() }} completed
+										@endif
+									</p>
+									<p style="color: #e5e7eb; font-size: 14px;">
+										<strong>Final Test:</strong>
+										@if ($topic->finalTestResult)
+											{{ $topic->finalTestResult->score }}%
+										@else
+											0%
+										@endif
+									</p>
+								</div>
+							</div>
+						</a>
                     @endforeach
                 @endif
             </div>

@@ -2,33 +2,60 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Topic extends Model
 {
-    use HasFactory;
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['title', 'description', 'path_id', 'image', 'resources', 'order'];
 
-    protected $fillable = [
-        'path_id',
-        'title',
-        'description',
-        'resources',
-        'order',
-		'image',
-    ];
-
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
     protected $casts = [
-        'resources' => 'array', // Treat resources as JSON array
+        'resources' => 'array',
     ];
 
+    /**
+     * Get the quizzes for the topic.
+     */
+    public function quizzes()
+    {
+        return $this->hasMany(Quiz::class);
+    }
+
+    /**
+     * Get the user quiz results for the topic's quizzes.
+     */
+    public function userQuizResults()
+    {
+        return $this->hasManyThrough(
+            UserQuizResult::class,
+            Quiz::class,
+            'topic_id', // Foreign key on Quiz	
+            'quiz_id',  // Foreign key on UserQuizResult
+            'id',       // Local key on Topic
+			'id',
+			'answer'
+        );
+    }
+	
+	public function userProgress()
+	{
+		return $this->hasOne(UserProgress::class, 'topic_id')->where('user_id', auth()->id());
+	}
+
+    /**
+     * Get the learning path that owns the topic.
+     */
     public function learningPath()
     {
         return $this->belongsTo(LearningPath::class, 'path_id');
-    }
-
-    public function userProgress()
-    {
-        return $this->hasOne(UserProgress::class, 'topic_id')->where('user_id', auth()->id());
     }
 }

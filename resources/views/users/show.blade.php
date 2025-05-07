@@ -50,7 +50,8 @@
                            style="background-color: #4b5563; color: #e5e7eb; padding: 24px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); text-decoration: none; width: 300px; height: 150px; display: flex; align-items: center; justify-content: center; transition: background-color 0.2s; font-size: 18px; text-align: center;"
                            onmouseover="this.style.backgroundColor='#6b7280'"
                            onmouseout="this.style.backgroundColor='#4b5563'">
-                            {{ $path->title }}
+						   <img src="{{ $path->image }}" alt="{{ $path->title }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.05; z-index: 1;">
+                           {{ $path->title }}
                         </a>
                     @endforeach
                 </div>

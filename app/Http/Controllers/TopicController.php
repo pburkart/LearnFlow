@@ -58,6 +58,7 @@ class TopicController extends Controller
     public function show(Topic $topic)
     {
         \Log::info('Show method called for topic ID: ' . $topic->id);
+		$topic->load(['learningPath', 'quizzes', 'userQuizResults']);
         return view('topics.show', compact('topic'));
     }
 

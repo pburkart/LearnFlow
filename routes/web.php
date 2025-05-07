@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LearningPathController;
 use App\Http\Controllers\TopicController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\QuizController;
 
 // Unpriviledged Routes
 Route::get('/dashboard', [HomeController::class, 'index'])->name('home');
@@ -15,6 +16,9 @@ Route::get('/profile', [HomeController::class, 'profile'])->name('user.profile')
 // Unpriviledged Topic Routes 
 Route::get('/topics/{topic}', [TopicController::class, 'show'])->name('topics.show');
 Route::post('/topics/{id}/complete', [TopicController::class, 'markComplete'])->name('topic.complete');
+
+// Unpriviledged Quiz Routes
+Route::post('quizzes/{quiz}/submit', [QuizController::class, 'submit'])->name('quizzes.submit');
 
 // Unpriviledged Learning Path Routes 
 Route::get('/learning-paths', [LearningPathController::class, 'list'])->name('learning-paths.show');
@@ -53,6 +57,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/topics/{topic}/edit', [TopicController::class, 'edit'])->name('topics.edit');
     Route::put('/topics/{topic}', [TopicController::class, 'update'])->name('topics.update'); 
     Route::delete('/topics/{topic}', [TopicController::class, 'destroy'])->name('topics.destroy');
+	
+	// Quiz CRUD Routes
+	Route::post('/quizzes', [QuizController::class, 'store']) -> name('quizzes.store');
+	Route::put('/quizzes/{quiz}}', [QuizController::class, 'update']) -> name('quizzes.update');
+	Route::delete('/quizzes/{quiz}', [QuizController::class, 'destroy']) -> name('quizzes.destroy');
 	
 	// Users CRUD Routes
 	Route::get('/users', [UserController::class, 'index'])->name('users.index');
